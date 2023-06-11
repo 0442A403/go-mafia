@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+option go_package = "0442a403.hse.ru/mafia/pkg/proto/mafia-server";
+
+package server;
+
+service MafiaEngine {
+  rpc GetState (GetStateRequest) returns (GetStateReply) {}
+  rpc ConnectLobby (ConnectLobbyRequest) returns (ConnectLobbyReply) {}
+  rpc CreateLobby (CreateLobbyRequest) returns (CreateLobbyReply) {}
+  rpc StartGame (StartGameRequest) returns (StartGameReply) {}
+  rpc ChooseAsMafia (ChooseAsMafiaRequest) returns (ChooseAsMafiaReply) {}
+  rpc ChooseAsMilitia (ChooseAsMilitiaRequest) returns (ChooseAsMilitiaReply) {}
+  rpc FinishDay (FinishDayRequest) returns (FinishDayReply) {}
+  rpc Lynch (LynchRequest) returns (LynchReply) {}
+}
+
+message GetStateRequest {
+  string lobby_id = 1;
+}
+
+message Player {
+  string player_id = 1;
+  string name = 2;
+  bool is_dead = 3;
+  bool is_robot = 4;
+}
+
+enum GameState {
+  NOT_STARTED = 0;
+  RUNNING = 1;
+  FINISHED = 2;
+}
+
+enum DayStage {
+  DAY = 0;
+  NIGHT_MILITIA = 1;
+  NIGHT_MAFIA = 2;
+}
+
+message State {
+  string lobby_id =1;
+  repeated Player players = 2;
+  GameState state = 3;
+  DayStage day_stage = 4;
+  int32 day_number = 5;
+}
+
+message Notification {
+  string text = 1;
+}
+
+message GetStateReply {
+  State state = 1;
+  repeated Notification notifications = 2;
+}
+
+message ConnectLobbyRequest {
+  string lobby_id = 1;
+  string player_name = 2;
+}
+
+message ConnectLobbyReply {}
+
+message CreateLobbyRequest {
+  string player_name = 2;
+}
+
+message CreateLobbyReply {
+  string lobby_id = 1;
+}
+
+message StartGameRequest {
+  string lobby_id = 1;
+  int32 bot_number = 2;  
+}
+
+message StartGameReply {}
+
+message ChooseAsMafiaRequest {
+  string lobby_id = 1;
+  string choosed_player = 2;
+}
+
+message ChooseAsMafiaReply {}
+
+message ChooseAsMilitiaRequest {
+  string lobby_id = 1;
+  string choosed_player = 2;
+}
+
+message ChooseAsMilitiaReply {}
+
+message FinishDayRequest {
+  string lobby_id = 1;
+}
+
+message FinishDayReply {}
+
+message LynchRequest {
+  string lobby_id = 1;
+  string guilty_player_id = 2;
+}
+
+message LynchReply {}
